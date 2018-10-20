@@ -1,9 +1,7 @@
 ---
 title: "hw05-gapminder"
 output:
-   html_document:
-      self_contained: false
-      keep_md: true
+   github_document
 ---
 
 # Factor and figure management
@@ -17,30 +15,25 @@ suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(gapminder))
 suppressPackageStartupMessages(library(knitr))
 suppressPackageStartupMessages(library(plotly))
-suppressPackageStartupMessages(library(broom))
 suppressPackageStartupMessages(library(scales))
 ```
 
-* We'll use *forcats* to help re-order factors (package located inside the tidyverse) and *plotly* to enhance the plot visualization. *Broom* is handy for providing statistical analyses.
+* We'll use *forcats* to help re-order factors (package located inside the tidyverse) and *plotly* to enhance the plot visualization
 * We will check the structure of the data first to *sanity check* that we are working with factors:
 
 ```{r}
 gapminder %>% str()
 ```
 
-* We've confirmed that *country* is a factor with 142 levels and *continent* is a factor with 5 levels. We'll proceed with manipulating the data.
+* We've confirmed that *country* is a factor with 142 levels and *continent* is a factor with 5 levels. We'll proceed with manipulating these factors
 
 ## Part 1 - Factor Management
 *Characterize data before and after re-levelling*
 
-Drop Oceania. Filter the Gapminder data to remove observations associated with the continent of Oceania. Additionally, remove unused factor levels. Provide concrete information on the data before and after removing these rows and Oceania; address the number of rows and the levels of the affected factors.
-
-Reorder the levels of country or continent. Use the forcats package to change the order of the factor levels, based on a principled summary of one of the quantitative variables. Consider experimenting with a summary statistic beyond the most basic choice of the median.
-
 ### Method
 * Drop Oceania by filtering the data to remove observations
 * Remove unused factor levels
-* Provide concrete information on the data before/after the manipulation (e.g. effect on number of rows/levels of affected factors)
+* Provide concrete information on the data before/after the manipulation
 * Re-order the levels of continent
 
 ### Code
@@ -80,9 +73,11 @@ gapminder_dropOc %>%
   str()
 ```
 
-We observe that Oceania has now disappeared from the continent list. Further, we see that the factor continent now has only 4 levels. The original data set had 1704 observations of 6 variables (i.e. 1704 rows and 6 columns), while the manipulated data set has 1680 observations of 6 variables. Therefore we observe a concrete reduction on the data. When manipulating a data set through filters, it is advantageous to create a new variable for the manipulated data in order to refer to it in the future and maintain the integrity of the original data set.
+Oceania has now disappeared from the continent list. Further, we see that the factor continent now has only 4 levels. The original data set had 1704 observations of 6 variables (i.e. 1704 rows and 6 columns), while the manipulated data set has 1680 observations of 6 variables. Therefore we observe a concrete reduction in the data set. 
 
-* Next we will create a principled summary of the data based on the quantitative variable *gdpPercap*. We want to evaluate the rank of countries in Europe based on gdpPercap. We will start by plotting the data as is:
+Also, when manipulating a data set through filters, it is advantageous to create a new variable for the manipulated data in order to refer to it in the future and maintain the integrity of the original data set.
+
+Next we will create a principled summary of the data based on the quantitative variable *gdpPercap*. We want to evaluate the rank of countries in Europe based on gdpPercap. We will start by evaluating the data as is, using the structure, a table and a plot:
 
 ```{r}
 Europe_gdp <- gapminder %>% 
