@@ -361,7 +361,7 @@ Europe_gdp_arr %>%
 
 ![](hw05-lsloboda_files/figure-markdown_github/unnamed-chunk-14-1.png)
 
-I will apply a few different techniques from class to improve the plot visually: \* Changing the scale to *dollar\_format()* \* Using the *black & white* theme \* Eliminating the unnecessary borders on the top and right side of the plot \* Centering the title \* Applying a continuous colour scheme to visually separate the countries by colour \* Removing the legend that is generated from applying the colour scheme
+I will apply a few different techniques from class to improve the plot visually: changing the scale to *dollar\_format()*; using the *black & white* theme; eliminating the unnecessary borders on the top and right side of the plot; centering the title; applying a continuous colour scheme to visually separate the countries by colour; removing the legend that is generated from applying the colour scheme:
 
 ``` r
 Europe_gdp_plot <- Europe_gdp_arr %>% 
@@ -393,7 +393,7 @@ Next, we will convert this plot into a *plotly* plot using the porting function 
  # ggplotly()
 ```
 
-To reduce the file size in Github, the output image can be viewed ![here](https://github.com/STAT545-UBC-students/hw05-lsloboda/blob/master/ggplotly.png).
+To reduce the file size in Github, the output image is embedded. [here](https://github.com/STAT545-UBC-students/hw05-lsloboda/blob/master/ggplotly.png)
 
 The biggest advantage that I can glean from using *plotly* is the ability to read data point values using the cursor. By mousing over any location on the graph, it is possible to see the exact (x,y) coordinates. The conversion also added the legend back in, but the rest of the formatting was preserved. The overal aesthetic is slightly cleaner and crisper than the \*\*ggplot\* plot. I believe this is due to the change in font and crisper borders.
 
@@ -412,7 +412,7 @@ The biggest advantage that I can glean from using *plotly* is the ability to rea
   #htmlwidgets::saveWidget("plotly.html"
 ```
 
-To reduce the file size in Github, the output image can be viewed ![here](https://github.com/STAT545-UBC-students/hw05-lsloboda/blob/master/plotly.png).
+To reduce the file size in Github, the output image is embedded. [here](https://github.com/STAT545-UBC-students/hw05-lsloboda/blob/master/plotly.png)
 
 *Plotly* opens us many possibilities for making data more interactive. It allows plots to be easily embedded on webpages and allows you to explore many new visualizations options that can help to reveal correlations in the data.
 
@@ -425,7 +425,7 @@ Finally, we will save the plot as a *png* image:
 ggsave("Europe_gdp_plot.png", plot = Europe_gdp_plot, width = 18, height = 8, units = "cm")
 ```
 
-The plot image is located ![here](https://github.com/STAT545-UBC-students/hw05-lsloboda/blob/master/Europe_gdp_plot.png)
+The plot image is located [here](https://github.com/STAT545-UBC-students/hw05-lsloboda/blob/master/Europe_gdp_plot.png)
 
 Resources
 ---------
