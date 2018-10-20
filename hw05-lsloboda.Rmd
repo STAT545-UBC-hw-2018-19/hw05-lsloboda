@@ -250,8 +250,8 @@ Europe_gdp_plot
 Then, we will convert this plot into a *plotly* plot using the porting function in *ggplotly*:
 
 ```{r}
-Europe_gdp_plot %>% 
-  ggplotly()
+#Europe_gdp_plot %>% 
+ # ggplotly()
 
 ```
 
@@ -260,15 +260,15 @@ The biggest advantage that I can glean from using *plotly* is the ability to rea
 *Plotly* can also be used to create 3D plots and HTML widgets, which can't be done in ggplot:
 
 ```{r}
-plot_ly(
-  Europe_gdp_arr, 
-  x = ~country, 
-  y = ~gdpPercap, 
-  z = ~year,
-  type = "scatter3d",
-  mode = "markers",
-  opacity = 0.5
-  ) #%>% 
+#plot_ly(
+ # Europe_gdp_arr, 
+  #x = ~country, 
+  #y = ~gdpPercap, 
+  #z = ~year,
+  #type = "scatter3d",
+  #mode = "markers",
+  #opacity = 0.5
+  #) #%>% 
   #htmlwidgets::saveWidget("plotly.html"
 ```
 
