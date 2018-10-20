@@ -37,8 +37,6 @@ gapminder %>% str()
 Part 1 - Factor Management
 --------------------------
 
-*Characterize data before and after re-levelling*
-
 ### Method
 
 -   Drop Oceania by filtering the data to remove observations
@@ -190,12 +188,40 @@ The structure was not affected by *arrange*.
 ``` r
 Europe_gdp_head <- Europe_gdp %>% 
   head() %>% 
-  kable()
+  kable() %>% 
+  print()
+```
 
+    ## 
+    ## 
+    ## continent   country    gdpPercap   year
+    ## ----------  --------  ----------  -----
+    ## Europe      Albania     1601.056   1952
+    ## Europe      Albania     1942.284   1957
+    ## Europe      Albania     2312.889   1962
+    ## Europe      Albania     2760.197   1967
+    ## Europe      Albania     3313.422   1972
+    ## Europe      Albania     3533.004   1977
+
+``` r
 Europe_gdp_arr_head <- Europe_gdp_arr %>% 
   head() %>% 
-  kable()
-  
+  kable() %>% 
+  print()
+```
+
+    ## 
+    ## 
+    ## continent   country                   gdpPercap   year
+    ## ----------  -----------------------  ----------  -----
+    ## Europe      Bosnia and Herzegovina     973.5332   1952
+    ## Europe      Bosnia and Herzegovina    1353.9892   1957
+    ## Europe      Albania                   1601.0561   1952
+    ## Europe      Bosnia and Herzegovina    1709.6837   1962
+    ## Europe      Albania                   1942.2842   1957
+    ## Europe      Turkey                    1969.1010   1952
+
+``` r
 Europe_gdp_arr %>% 
   ggplot(aes(country, gdpPercap)) + 
   geom_violin() +
@@ -260,17 +286,20 @@ gapminder_lifeExp <- gapminder %>%
 
 gapminder_lifeExp %>% 
   head() %>% 
-  kable()
+  kable() %>% 
+  print()
 ```
 
-| continent |  year|  mean\_gdp|
-|:----------|-----:|----------:|
-| Africa    |  1952|   39.13550|
-| Africa    |  1957|   41.26635|
-| Africa    |  1962|   43.31944|
-| Africa    |  1967|   45.33454|
-| Africa    |  1972|   47.45094|
-| Africa    |  1977|   49.58042|
+    ## 
+    ## 
+    ## continent    year   mean_gdp
+    ## ----------  -----  ---------
+    ## Africa       1952   39.13550
+    ## Africa       1957   41.26635
+    ## Africa       1962   43.31944
+    ## Africa       1967   45.33454
+    ## Africa       1972   47.45094
+    ## Africa       1977   49.58042
 
 ``` r
 gapminder_lifeExp_arr <- gapminder_lifeExp %>% 
@@ -278,17 +307,20 @@ gapminder_lifeExp_arr <- gapminder_lifeExp %>%
 
 gapminder_lifeExp_arr %>% 
   head() %>% 
-  kable()
+  kable() %>% 
+  print()
 ```
 
-| continent |  year|  mean\_gdp|
-|:----------|-----:|----------:|
-| Africa    |  1952|   39.13550|
-| Africa    |  1957|   41.26635|
-| Africa    |  1962|   43.31944|
-| Africa    |  1967|   45.33454|
-| Asia      |  1952|   46.31439|
-| Africa    |  1972|   47.45094|
+    ## 
+    ## 
+    ## continent    year   mean_gdp
+    ## ----------  -----  ---------
+    ## Africa       1952   39.13550
+    ## Africa       1957   41.26635
+    ## Africa       1962   43.31944
+    ## Africa       1967   45.33454
+    ## Asia         1952   46.31439
+    ## Africa       1972   47.45094
 
 We observe the difference in values between the original data and the arranged data and will use these tables to determine whether the *csv* file preserves the arrangement or reverts to the original order:
 

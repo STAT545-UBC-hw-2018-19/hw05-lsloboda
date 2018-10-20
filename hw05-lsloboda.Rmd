@@ -28,7 +28,6 @@ gapminder %>% str()
 * We've confirmed that *country* is a factor with 142 levels and *continent* is a factor with 5 levels. We'll proceed with manipulating these factors
 
 ## Part 1 - Factor Management
-*Characterize data before and after re-levelling*
 
 ### Method
 * Drop Oceania by filtering the data to remove observations
@@ -118,11 +117,13 @@ The structure was not affected by *arrange*.
 ```{r}
 Europe_gdp_head <- Europe_gdp %>% 
   head() %>% 
-  kable()
+  kable() %>% 
+  print()
 
 Europe_gdp_arr_head <- Europe_gdp_arr %>% 
   head() %>% 
-  kable()
+  kable() %>% 
+  print()
   
 Europe_gdp_arr %>% 
   ggplot(aes(country, gdpPercap)) + 
@@ -182,14 +183,16 @@ gapminder_lifeExp <- gapminder %>%
 
 gapminder_lifeExp %>% 
   head() %>% 
-  kable()
+  kable() %>% 
+  print()
 
 gapminder_lifeExp_arr <- gapminder_lifeExp %>% 
   arrange(mean_gdp)
 
 gapminder_lifeExp_arr %>% 
   head() %>% 
-  kable()
+  kable() %>% 
+  print()
 ```
 
 We observe the difference in values between the original data and the arranged data and will use these tables to determine whether the *csv* file preserves the arrangement or reverts to the original order:
