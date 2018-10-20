@@ -39,7 +39,7 @@ Reorder the levels of country or continent. Use the forcats package to change th
 * Drop Oceania by filtering the data to remove observations
 * Remove unused factor levels
 * Provide concrete information on the data before/after the manipulation (e.g. effect on number of rows/levels of affected factors)
-* Re-order the levels of continent: use forcats to change the order of the factor levels based on a principled summary of one of the quantitative variables (consider something other than median)
+* Re-order the levels of continent
 
 ### Code
 First, we will examine a summary of the initial data:
@@ -96,7 +96,7 @@ Europe_gdp %>%
 
 Europe_gdp %>% 
   ggplot(aes(country, gdpPercap)) + 
-  geom_point() +
+  geom_violin() +
   labs(title = "GDP per capita - Europe",
     x = "Country", y = "GDP per capita") +
   scale_y_log10(labels=dollar_format()) +
@@ -122,7 +122,7 @@ Europe_gdp_arr %>%
 
 Europe_gdp_arr %>% 
   ggplot(aes(country, gdpPercap)) + 
-  geom_point() +
+  geom_violin() +
   labs(title = "GDP per capita - Europe",
     x = "Country", y = "GDP per capita") +
   scale_y_log10(labels=dollar_format()) +
@@ -136,7 +136,7 @@ We observe the *arrange* did not affect the structure or the plot, however the t
 ```{r}
 Europe_gdp %>% 
   ggplot(aes(fct_reorder(country, gdpPercap), gdpPercap)) + 
-  geom_point() +
+  geom_violin() +
   labs(title = "GDP per capita - Europe",
     x = "Country", y = "GDP per capita") +
   scale_y_log10(labels=dollar_format()) +
@@ -152,7 +152,7 @@ We observe that *fct_reorder* does affect the plot, as it now shows countries in
 
 Europe_gdp_arr %>% 
   ggplot(aes(fct_reorder(country, gdpPercap), gdpPercap)) + 
-  geom_point() +
+  geom_violin() +
   labs(title = "GDP per capita - Europe",
     x = "Country", y = "GDP per capita") +
   scale_y_log10(labels=dollar_format()) +
@@ -165,6 +165,63 @@ Europe_gdp_arr %>%
 Thus, coupling *arrange* and *fct_reorder* allows us to manipulate the structure, table and plot, so it is more comprehensive to use both commands if all three types of output are desired.
 
 ## Part 2 - File I/O
+
+Experiment with one or more of write_csv()/read_csv() (and/or TSV friends), saveRDS()/readRDS(), dput()/dget(). 
+Create something new, probably by filtering or grouped-summarization of Singer or Gapminder. 
+I highly recommend you fiddle with the factor levels, i.e. make them non-alphabetical (see previous section). 
+Explore whether this survives the round trip of writing to file then reading back in.
+
+### Method
+* Create a new data set
+* Arrange the data set
+* Write to file
+* Read from file
+
+### Code
+``` {r}
+gapminder_lifeExp <- gapminder %>% 
+  select(lifeExp, continent, year) %>% 
+  group_by(continent, year) %>% 
+  summarise(mean_gdp = mean(lifeExp))
+
+gapminder_lifeExp %>% kable()
+
+gapminder_lifeExp_arr <- gapminder_lifeExp %>% 
+  arrange(mean_gdp)
+
+gapminder_lifeExp_arr %>% 
+  kable()
+```
+
+We observe the difference between the tables after the *arrange* function has been applied. Now we will test if the arrangment is preserved after writing and reading to a file:
+
+```{r}
+write_csv(gapminder_lifeExp_arr, "gapminder_lifeExp_arr.csv")
+
+read_csv("gapminder_lifeExp_arr.csv")
+```
+
+The new arrangement of the data was preserved, therefore we learned that *arrange* can be used to manipulate tables that are written externally to files, in addition to tables internally within the R environment, as we learned in the previous section.
+
 ## Part 3 - Visualization Design
+
+Remake at least one figure or create a new one, in light of something you learned in the recent class meetings about visualization design and color. Maybe juxtapose your first attempt and what you obtained after some time spent working on it. Reflect on the differences. If using Gapminder, you can use the country or continent color scheme that ships with Gapminder. Consult the dimensions listed in All the Graph Things.
+
+Then, make a new graph by converting this visual (or another, if you’d like) to a plotly graph. What are some things that plotly makes possible, that are not possible with a regular ggplot2 graph?
+
 ## Part 4 - Writing figures to file
+
+Use ggsave() to explicitly save a plot to file. Then use ![Alt text](/path/to/img.png) to load and embed it in your report. You can play around with various options, such as:
+
+Arguments of ggsave(), such as width, height, resolution or text scaling.
+Various graphics devices, e.g. a vector vs. raster format.
+Explicit provision of the plot object p via ggsave(..., plot = p). Show a situation in which this actually matters.
+
 ## Bonus - Re-evaluate a factor
+
+Make a deeper exploration of the forcats packages, i.e. try more of the factor level reordering functions.
+
+Revalue a factor, e.g.:
+
+Gapminder version: Pick a handful of countries, each of which you can associate with a stereotypical food (or any other non-controversial thing … sport? hobby? type of music, art or dance? animal? landscape feature?). Create an excerpt of the Gapminder data, filtered to just these countries. Create a new factor – you pick the name! – by mapping the existing country factor levels to the new levels.
+Examples: Italy –> wine, Germany –> beer, Japan –> sake. (Austria, Germany) –> German, (Mexico, Spain) –> Spanish, (Portugal, Brazil) –> Portuguese. Let your creativity flourish.
