@@ -116,8 +116,14 @@ Europe_gdp_arr %>%
 The structure was not affected by *arrange*.
 
 ```{r}
+Europe_gdp_head <- Europe_gdp %>% 
+  head()
+
+Europe_gdp_arr_head <- Europe_gdp_arr %>% 
+  head()
+
 kable(
-  list(head(Europe_gdp), head(Europe_gdp_arr))
+  list(Europe_gdp_head, Europe_gdp_arr_head)
   )
   
 Europe_gdp_arr %>% 
