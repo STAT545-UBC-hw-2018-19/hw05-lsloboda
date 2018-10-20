@@ -117,14 +117,12 @@ The structure was not affected by *arrange*.
 
 ```{r}
 Europe_gdp_head <- Europe_gdp %>% 
-  head()
+  head() %>% 
+  kable()
 
 Europe_gdp_arr_head <- Europe_gdp_arr %>% 
-  head()
-
-kable(
-  list(Europe_gdp_head, Europe_gdp_arr_head)
-  )
+  head() %>% 
+  kable()
   
 Europe_gdp_arr %>% 
   ggplot(aes(country, gdpPercap)) + 
@@ -135,7 +133,7 @@ Europe_gdp_arr %>%
   theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 10))  #Rotate x labels
 ```
 
-The tables are useful for capturing exact values from the data. We can observe the difference between the "as is" data on the left versus the arranged data on the right. Therefore, the *arrange* functions did not affect the structure or the plot, however the table output is clearly different. 
+The tables are useful for capturing exact values from the data. We can observe the difference between the "as is" data versus the arranged data. Therefore, the *arrange* functions did not affect the structure or the plot, however the table output is clearly different. 
 Next we will evaluate the effect of using the *forcats* package to re-order the data:
 
 ```{r}
@@ -182,29 +180,29 @@ gapminder_lifeExp <- gapminder %>%
   group_by(continent, year) %>% 
   summarise(mean_gdp = mean(lifeExp))
 
+gapminder_lifeExp %>% 
+  head() %>% 
+  kable()
+
 gapminder_lifeExp_arr <- gapminder_lifeExp %>% 
   arrange(mean_gdp)
 
-kable(
-  list(head(gapminder_lifeExp), head(gapminder_lifeExp_arr))
-  )
+gapminder_lifeExp_arr %>% 
+  head() %>% 
+  kable()
 ```
 
-The original data is shown on the left while the arranged data is shown on the right. We observe the difference in values and will use these tables to determine whether the *csv* file preserves the arrangement or reverts to the original order:
+We observe the difference in values between the original data and the arranged data and will use these tables to determine whether the *csv* file preserves the arrangement or reverts to the original order:
 
 ```{r}
 write_csv(gapminder_lifeExp_arr, "gapminder_lifeExp_arr.csv")
 
-read_csv("gapminder_lifeExp_arr.csv")
+read_csv("gapminder_lifeExp_arr.csv") %>% 
+  kable()
 
-kable(
-  list(head(gapminder_lifeExp), 
-       head(gapminder_lifeExp_arr), 
-       head(read_csv("gapminder_lifeExp_arr.csv")))
-  )
 ```
 
-The new table, shown on the far right, matches the second table which represented the arranged data. Therefore, we learned that *arrange* can be used to manipulate tables that are written externally to files. This is a powerful technique for manipulating data, as it is much more convinient to sort data using R than to sort it manually in a *csv*.
+The new table matches the arranged data table shown previously. Therefore, we learned that *arrange* can be used to manipulate tables that are written externally to files. This is a powerful technique for manipulating data, as it is much more convinient to sort data using R than to sort it manually in a *csv*.
 
 ## Part 3 - Visualization Design
 
