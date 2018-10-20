@@ -422,7 +422,7 @@ Part 4 - Writing figures to file
 Finally, we will save the plot as a *png* image:
 
 ``` r
-ggsave("Europe_gdp_plot.png", plot = Europe_gdp_plot, width = 18, height = 18, units = "cm")
+ggsave("Europe_gdp_plot.png", plot = Europe_gdp_plot, width = 20, height = 40, units = "cm")
 ```
 
 The plot image is located [here](https://github.com/STAT545-UBC-students/hw05-lsloboda/blob/master/Europe_gdp_plot.png).
