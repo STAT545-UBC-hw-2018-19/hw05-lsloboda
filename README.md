@@ -2,7 +2,7 @@
 
 ## Overview
 **This repo contains the files relevant to STAT 545 Homework 05.**
-  The homework file is located in the .md file.
+  The homework file is located [here](https://github.com/STAT545-UBC-students/hw05-lsloboda/blob/master/hw05-lsloboda.md).
 
 ## Purpose
 
