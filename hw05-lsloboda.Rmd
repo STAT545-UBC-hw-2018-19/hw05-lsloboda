@@ -1,7 +1,9 @@
 ---
 title: "hw05-gapminder"
 output:
-  github_document
+   html_document:
+      self_contained: false
+      keep_md: true
 ---
 
 # Factor and figure management
@@ -202,9 +204,7 @@ The new arrangement of the data was preserved, therefore we learned that *arrang
 
 ## Part 3 - Visualization Design
 
-Remake at least one figure or create a new one, in light of something you learned in the recent class meetings about visualization design and color. Maybe juxtapose your first attempt and what you obtained after some time spent working on it. Reflect on the differences. If using Gapminder, you can use the country or continent color scheme that ships with Gapminder. Consult the dimensions listed in All the Graph Things.
-
-Then, make a new graph by converting this visual (or another, if you’d like) to a plotly graph. What are some things that plotly makes possible, that are not possible with a regular ggplot2 graph?
+Next I will improve my first plot using techniques from visualization design to enhance the appearance and readability. My first plot looked like this:
 
 ```{r}
 Europe_gdp_arr %>% 
@@ -216,11 +216,19 @@ Europe_gdp_arr %>%
   theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 10))  #Rotate x labels
 ```
 
-Second attempt:
+I applied a few different techniques from class to improve the plot visually:
+* Changing the scale to *dollar_format()*
+* Using the *black & white* theme
+* Eliminating the unnecessary borders on the top and right side of the plot
+* Centering the title
+* Applying a continuous colour scheme to visually separate the countries by colour
+* Removing the legend that is generated from applying the colour scheme
+
+Overall, I believe that the plot is visually easier to read and more appealing to the viewer, due to the removal of unnecessary features and the addition of colour:
 
 ```{r}
 
-Europe_gdp_arr %>% 
+Europe_gdp_plot <- Europe_gdp_arr %>% 
   ggplot(aes(fct_reorder(country, gdpPercap), gdpPercap, fill = country), alpha = 0.2) + 
   geom_violin() +
   labs(title = "GDP per capita (European countries)",
@@ -234,8 +242,34 @@ Europe_gdp_arr %>%
   theme(plot.title = element_text(hjust = 0.5)) +
   guides(fill = FALSE) +
   theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 10))
- 
+
+Europe_gdp_plot
   
+```
+
+Then, we will convert this plot into a *plotly* plot using the porting function in *ggplotly*:
+
+```{r}
+Europe_gdp_plot %>% 
+  ggplotly()
+
+```
+
+The biggest advantage that I can glean from using *plotly* is the ability to read data point values using the cursor. By mousing over any location on the graph, it is possible to see the exact (x,y) coordinates. The conversion also added the legend back in, but the rest of the formatting was preserved. The overal aesthetic is slightly cleaner and crisper than the **ggplot* plot. I believe this is due to the change in font and crisper borders.
+
+*Plotly* can also be used to create 3D plots and HTML widgets, which can't be done in ggplot:
+
+```{r}
+plot_ly(
+  Europe_gdp_arr, 
+  x = ~country, 
+  y = ~gdpPercap, 
+  z = ~year,
+  type = "scatter3d",
+  mode = "markers",
+  opacity = 0.5
+  ) #%>% 
+  #htmlwidgets::saveWidget("plotly.html"
 ```
 
 ## Part 4 - Writing figures to file
@@ -246,6 +280,16 @@ Arguments of ggsave(), such as width, height, resolution or text scaling.
 Various graphics devices, e.g. a vector vs. raster format.
 Explicit provision of the plot object p via ggsave(..., plot = p). Show a situation in which this actually matters.
 
+Finally, we will save the plot as a *png* image.
+
+```{r}
+ggsave("Europe_gdp_plot.png", plot = Europe_gdp_plot, width = 18, height = 8, units = "cm")
+
+```
+
+The plot image is located ![here](https://github.com/STAT545-UBC-students/hw05-lsloboda)
+
 ## Resources
 http://felixfan.github.io/ggplot2-remove-grid-background-margin/
+https://stackoverflow.com/questions/40675778/center-plot-title-in-ggplot2
 
