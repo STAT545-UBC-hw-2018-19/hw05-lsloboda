@@ -77,7 +77,7 @@ Oceania has now disappeared from the continent list. Further, we see that the fa
 
 Also, when manipulating a data set through filters, it is advantageous to create a new variable for the manipulated data in order to refer to it in the future and maintain the integrity of the original data set.
 
-Next we will create a principled summary of the data based on the quantitative variable *gdpPercap*. We want to evaluate the rank of countries in Europe based on gdpPercap. We will start by evaluating the data as is, using the structure, a table and a plot:
+Next we will create a principled summary of the data based on the quantitative variable *gdpPercap*. We want to evaluate the rank of countries in Europe based on *gdpPercap*. We will start by evaluating the data as is, by observing the structure, a table and a plot:
 
 ```{r}
 Europe_gdp <- gapminder %>% 
@@ -86,10 +86,11 @@ Europe_gdp <- gapminder %>%
 
 Europe_gdp %>% 
   str()
+```
 
-Europe_gdp %>% 
-  head() %>% 
-  kable()
+The structure shows that we have 360 rows and 4 columns of data. All levels are currently present for all factors.
+
+```{r}
 
 Europe_gdp %>% 
   ggplot(aes(country, gdpPercap)) + 
@@ -102,7 +103,7 @@ Europe_gdp %>%
   
 ```
 
-Plotting the data directly doesn't provide any insight into a correlation between these two variables. We will next *arrange* by gdpPerCap to see whether this has an effect on the table and plot:
+The plot doesn't provide any insight into the rank of countries with respect to *gdpPercap* in it's current state. We will next *arrange* by *gdpPerCap* to see whether this has an effect on the table and plot:
 
 ```{r}
 Europe_gdp_arr <- Europe_gdp %>% 
@@ -110,11 +111,15 @@ Europe_gdp_arr <- Europe_gdp %>%
 
 Europe_gdp_arr %>% 
   str()
+```
 
-Europe_gdp_arr %>% 
-  head() %>% 
-  kable()
+The structure was not affected by *arrange*.
 
+```{r}
+kable(
+  list(head(Europe_gdp), head(Europe_gdp_arr))
+  )
+  
 Europe_gdp_arr %>% 
   ggplot(aes(country, gdpPercap)) + 
   geom_violin() +
@@ -124,7 +129,8 @@ Europe_gdp_arr %>%
   theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 10))  #Rotate x labels
 ```
 
-We observe the *arrange* did not affect the structure or the plot, however the table output is clearly different. Next we will evaluate the effect of using the *forcats* package to re-order the data:
+The tables are useful for capturing exact values from the data. We can observe the difference between the "as is" data on the left versus the arranged data on the right. Therefore, the *arrange* functions did not affect the structure or the plot, however the table output is clearly different. 
+Next we will evaluate the effect of using the *forcats* package to re-order the data:
 
 ```{r}
 Europe_gdp %>% 
@@ -137,10 +143,10 @@ Europe_gdp %>%
 
 ```
 
-We observe that *fct_reorder* does affect the plot, as it now shows countries in order of ascending median GDP per capita. Finally, we will examine the effect of combining *arrange* and *fct_reorder*:
+We observe that *fct_reorder* does affect the plot, as it now shows countries in order of ascending median GDP per capita. 
+Lastly, we will examine the effect of combining *arrange* and *fct_reorder*:
 
 ```{r}
-
 Europe_gdp_arr %>% 
   ggplot(aes(fct_reorder(country, gdpPercap), gdpPercap)) + 
   geom_violin() +
@@ -151,55 +157,52 @@ Europe_gdp_arr %>%
 
 ```
 
-Thus, coupling *arrange* and *fct_reorder* allows us to manipulate the structure, table and plot, so it is more comprehensive to use both commands if all three types of output are desired.
+Using the arranged data inside the re-ordered plot gave the same result as using the regular data with the re-ordered plot. However, we also know that *arrange* affects the table output. Thus, coupling *arrange* and *fct_reorder* allows us to manipulate the table and plot, so it is more comprehensive to use both commands if both types of output are desired.
 
 ## Part 2 - File I/O
-
-Experiment with one or more of write_csv()/read_csv() (and/or TSV friends), saveRDS()/readRDS(), dput()/dget(). 
-Create something new, probably by filtering or grouped-summarization of Singer or Gapminder. 
-I highly recommend you fiddle with the factor levels, i.e. make them non-alphabetical (see previous section). 
-Explore whether this survives the round trip of writing to file then reading back in.
 
 ### Method
 * Create a new data set
 * Arrange the data set
 * Write to file
 * Read from file
+* Check the arrangement of the data
 
 ### Code
+First, we will examine a sample of the data "as is". Then, we will *arrange* the data according to mean GDP per capita and compare:
 ``` {r}
 gapminder_lifeExp <- gapminder %>% 
   select(lifeExp, continent, year) %>% 
   group_by(continent, year) %>% 
   summarise(mean_gdp = mean(lifeExp))
 
-gapminder_lifeExp %>% 
-  head() %>% 
-  kable()
-
 gapminder_lifeExp_arr <- gapminder_lifeExp %>% 
   arrange(mean_gdp)
 
-gapminder_lifeExp_arr %>% 
-  head() %>% 
-  kable()
+kable(
+  list(head(gapminder_lifeExp), head(gapminder_lifeExp_arr))
+  )
 ```
 
-We observe the difference between the tables after the *arrange* function has been applied. Now we will test if the arrangment is preserved after writing and reading to a file:
+The original data is shown on the left while the arranged data is shown on the right. We observe the difference in values and will use these tables to determine whether the *csv* file preserves the arrangement or reverts to the original order:
 
 ```{r}
 write_csv(gapminder_lifeExp_arr, "gapminder_lifeExp_arr.csv")
 
-read_csv("gapminder_lifeExp_arr.csv") %>% 
-  head() %>% 
-  kable()
+read_csv("gapminder_lifeExp_arr.csv")
+
+kable(
+  list(head(gapminder_lifeExp), 
+       head(gapminder_lifeExp_arr), 
+       head(read_csv("gapminder_lifeExp_arr.csv")))
+  )
 ```
 
-The new arrangement of the data was preserved, therefore we learned that *arrange* can be used to manipulate tables that are written externally to files, in addition to tables internally within the R environment, as we learned in the previous section.
+The new table, shown on the far right, matches the second table which represented the arranged data. Therefore, we learned that *arrange* can be used to manipulate tables that are written externally to files. This is a powerful technique for manipulating data, as it is much more convinient to sort data using R than to sort it manually in a *csv*.
 
 ## Part 3 - Visualization Design
 
-Next I will improve my first plot using techniques from visualization design to enhance the appearance and readability. My first plot looked like this:
+Next I will improve the plot from Part 1 by using visualization design techniques to enhance the appearance and readability. As a reminder, my first plot looked like this:
 
 ```{r}
 Europe_gdp_arr %>% 
@@ -211,15 +214,13 @@ Europe_gdp_arr %>%
   theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 10))  #Rotate x labels
 ```
 
-I applied a few different techniques from class to improve the plot visually:
-* Changing the scale to *dollar_format()*
-* Using the *black & white* theme
-* Eliminating the unnecessary borders on the top and right side of the plot
-* Centering the title
-* Applying a continuous colour scheme to visually separate the countries by colour
-* Removing the legend that is generated from applying the colour scheme
-
-Overall, I believe that the plot is visually easier to read and more appealing to the viewer, due to the removal of unnecessary features and the addition of colour:
+I will apply a few different techniques from class to improve the plot visually:
+  * Changing the scale to *dollar_format()*
+  * Using the *black & white* theme
+  * Eliminating the unnecessary borders on the top and right side of the plot
+  * Centering the title
+  * Applying a continuous colour scheme to visually separate the countries by colour
+  * Removing the legend that is generated from applying the colour scheme
 
 ```{r}
 
@@ -242,13 +243,16 @@ Europe_gdp_plot
   
 ```
 
-Then, we will convert this plot into a *plotly* plot using the porting function in *ggplotly*:
+Overall, I believe that the plot is visually easier to read and more appealing to the viewer, due to the removal of unnecessary features and the addition of colour to separate the countries.
+
+Next, we will convert this plot into a *plotly* plot using the porting function in *ggplotly*:
 
 ```{r}
 #Europe_gdp_plot %>% 
  # ggplotly()
-
 ```
+
+To reduce the file size in Github, the output image can be viewed ~[here](https://github.com/STAT545-UBC-students/hw05-lsloboda).
 
 The biggest advantage that I can glean from using *plotly* is the ability to read data point values using the cursor. By mousing over any location on the graph, it is possible to see the exact (x,y) coordinates. The conversion also added the legend back in, but the rest of the formatting was preserved. The overal aesthetic is slightly cleaner and crisper than the **ggplot* plot. I believe this is due to the change in font and crisper borders.
 
@@ -267,15 +271,13 @@ The biggest advantage that I can glean from using *plotly* is the ability to rea
   #htmlwidgets::saveWidget("plotly.html"
 ```
 
+To reduce the file size in Github, the output image can be viewed ~[here](https://github.com/STAT545-UBC-students/hw05-lsloboda).
+
+*Plotly* opens us many possibilities for making data more interactive. It allows plots to be easily embedded on webpages and allows you to explore many new visualizations options that can help to reveal correlations in the data.
+
 ## Part 4 - Writing figures to file
 
-Use ggsave() to explicitly save a plot to file. Then use dfdf to load and embed it in your report. You can play around with various options, such as:
-
-Arguments of ggsave(), such as width, height, resolution or text scaling.
-Various graphics devices, e.g. a vector vs. raster format.
-Explicit provision of the plot object p via ggsave(..., plot = p). Show a situation in which this actually matters.
-
-Finally, we will save the plot as a *png* image.
+Finally, we will save the plot as a *png* image:
 
 ```{r}
 ggsave("Europe_gdp_plot.png", plot = Europe_gdp_plot, width = 18, height = 8, units = "cm")
@@ -287,4 +289,5 @@ The plot image is located ![here](https://github.com/STAT545-UBC-students/hw05-l
 ## Resources
 http://felixfan.github.io/ggplot2-remove-grid-background-margin/
 https://stackoverflow.com/questions/40675778/center-plot-title-in-ggplot2
+
 

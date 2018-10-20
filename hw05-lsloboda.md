@@ -138,7 +138,7 @@ Oceania has now disappeared from the continent list. Further, we see that the fa
 
 Also, when manipulating a data set through filters, it is advantageous to create a new variable for the manipulated data in order to refer to it in the future and maintain the integrity of the original data set.
 
-Next we will create a principled summary of the data based on the quantitative variable *gdpPercap*. We want to evaluate the rank of countries in Europe based on gdpPercap. We will start by evaluating the data as is, using the structure, a table and a plot:
+Next we will create a principled summary of the data based on the quantitative variable *gdpPercap*. We want to evaluate the rank of countries in Europe based on *gdpPercap*. We will start by evaluating the data as is, by observing the structure, a table and a plot:
 
 ``` r
 Europe_gdp <- gapminder %>% 
@@ -155,20 +155,7 @@ Europe_gdp %>%
     ##  $ gdpPercap: num  1601 1942 2313 2760 3313 ...
     ##  $ year     : int  1952 1957 1962 1967 1972 1977 1982 1987 1992 1997 ...
 
-``` r
-Europe_gdp %>% 
-  head() %>% 
-  kable()
-```
-
-| continent | country |  gdpPercap|  year|
-|:----------|:--------|----------:|-----:|
-| Europe    | Albania |   1601.056|  1952|
-| Europe    | Albania |   1942.284|  1957|
-| Europe    | Albania |   2312.889|  1962|
-| Europe    | Albania |   2760.197|  1967|
-| Europe    | Albania |   3313.422|  1972|
-| Europe    | Albania |   3533.004|  1977|
+The structure shows that we have 360 rows and 4 columns of data. All levels are currently present for all factors.
 
 ``` r
 Europe_gdp %>% 
@@ -180,9 +167,9 @@ Europe_gdp %>%
   theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 10))  #Rotate x labels
 ```
 
-![](hw05-lsloboda_files/figure-markdown_github/unnamed-chunk-6-1.png)
+![](hw05-lsloboda_files/figure-markdown_github/unnamed-chunk-7-1.png)
 
-Plotting the data directly doesn't provide any insight into a correlation between these two variables. We will next *arrange* by gdpPerCap to see whether this has an effect on the table and plot:
+The plot doesn't provide any insight into the rank of countries with respect to *gdpPercap* in it's current state. We will next *arrange* by *gdpPerCap* to see whether this has an effect on the table and plot:
 
 ``` r
 Europe_gdp_arr <- Europe_gdp %>% 
@@ -198,12 +185,29 @@ Europe_gdp_arr %>%
     ##  $ gdpPercap: num  974 1354 1601 1710 1942 ...
     ##  $ year     : int  1952 1957 1952 1962 1957 1952 1967 1957 1962 1962 ...
 
+The structure was not affected by *arrange*.
+
 ``` r
-Europe_gdp_arr %>% 
-  head() %>% 
-  kable()
+kable(
+  list(head(Europe_gdp), head(Europe_gdp_arr))
+  )
 ```
 
+<table class="kable_wrapper">
+<tbody>
+<tr>
+<td>
+| continent | country |  gdpPercap|  year|
+|:----------|:--------|----------:|-----:|
+| Europe    | Albania |   1601.056|  1952|
+| Europe    | Albania |   1942.284|  1957|
+| Europe    | Albania |   2312.889|  1962|
+| Europe    | Albania |   2760.197|  1967|
+| Europe    | Albania |   3313.422|  1972|
+| Europe    | Albania |   3533.004|  1977|
+
+</td>
+<td>
 | continent | country                |  gdpPercap|  year|
 |:----------|:-----------------------|----------:|-----:|
 | Europe    | Bosnia and Herzegovina |   973.5332|  1952|
@@ -213,6 +217,10 @@ Europe_gdp_arr %>%
 | Europe    | Albania                |  1942.2842|  1957|
 | Europe    | Turkey                 |  1969.1010|  1952|
 
+</td>
+</tr>
+</tbody>
+</table>
 ``` r
 Europe_gdp_arr %>% 
   ggplot(aes(country, gdpPercap)) + 
@@ -223,9 +231,9 @@ Europe_gdp_arr %>%
   theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 10))  #Rotate x labels
 ```
 
-![](hw05-lsloboda_files/figure-markdown_github/unnamed-chunk-7-1.png)
+![](hw05-lsloboda_files/figure-markdown_github/unnamed-chunk-9-1.png)
 
-We observe the *arrange* did not affect the structure or the plot, however the table output is clearly different. Next we will evaluate the effect of using the *forcats* package to re-order the data:
+The tables are useful for capturing exact values from the data. We can observe the difference between the "as is" data on the left versus the arranged data on the right. Therefore, the *arrange* functions did not affect the structure or the plot, however the table output is clearly different. Next we will evaluate the effect of using the *forcats* package to re-order the data:
 
 ``` r
 Europe_gdp %>% 
@@ -237,9 +245,9 @@ Europe_gdp %>%
   theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 10))  #Rotate x labels
 ```
 
-![](hw05-lsloboda_files/figure-markdown_github/unnamed-chunk-8-1.png)
+![](hw05-lsloboda_files/figure-markdown_github/unnamed-chunk-10-1.png)
 
-We observe that *fct\_reorder* does affect the plot, as it now shows countries in order of ascending median GDP per capita. Finally, we will examine the effect of combining *arrange* and *fct\_reorder*:
+We observe that *fct\_reorder* does affect the plot, as it now shows countries in order of ascending median GDP per capita. Lastly, we will examine the effect of combining *arrange* and *fct\_reorder*:
 
 ``` r
 Europe_gdp_arr %>% 
@@ -251,14 +259,12 @@ Europe_gdp_arr %>%
   theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 10))  #Rotate x labels
 ```
 
-![](hw05-lsloboda_files/figure-markdown_github/unnamed-chunk-9-1.png)
+![](hw05-lsloboda_files/figure-markdown_github/unnamed-chunk-11-1.png)
 
-Thus, coupling *arrange* and *fct\_reorder* allows us to manipulate the structure, table and plot, so it is more comprehensive to use both commands if all three types of output are desired.
+Using the arranged data inside the re-ordered plot gave the same result as using the regular data with the re-ordered plot. However, we also know that *arrange* affects the table output. Thus, coupling *arrange* and *fct\_reorder* allows us to manipulate the table and plot, so it is more comprehensive to use both commands if both types of output are desired.
 
 Part 2 - File I/O
 -----------------
-
-Experiment with one or more of write\_csv()/read\_csv() (and/or TSV friends), saveRDS()/readRDS(), dput()/dget(). Create something new, probably by filtering or grouped-summarization of Singer or Gapminder. I highly recommend you fiddle with the factor levels, i.e. make them non-alphabetical (see previous section). Explore whether this survives the round trip of writing to file then reading back in.
 
 ### Method
 
@@ -266,8 +272,11 @@ Experiment with one or more of write\_csv()/read\_csv() (and/or TSV friends), sa
 -   Arrange the data set
 -   Write to file
 -   Read from file
+-   Check the arrangement of the data
 
 ### Code
+
+First, we will examine a sample of the data "as is". Then, we will *arrange* the data according to mean GDP per capita and compare:
 
 ``` r
 gapminder_lifeExp <- gapminder %>% 
@@ -275,11 +284,18 @@ gapminder_lifeExp <- gapminder %>%
   group_by(continent, year) %>% 
   summarise(mean_gdp = mean(lifeExp))
 
-gapminder_lifeExp %>% 
-  head() %>% 
-  kable()
+gapminder_lifeExp_arr <- gapminder_lifeExp %>% 
+  arrange(mean_gdp)
+
+kable(
+  list(head(gapminder_lifeExp), head(gapminder_lifeExp_arr))
+  )
 ```
 
+<table class="kable_wrapper">
+<tbody>
+<tr>
+<td>
 | continent |  year|  mean\_gdp|
 |:----------|-----:|----------:|
 | Africa    |  1952|   39.13550|
@@ -289,15 +305,8 @@ gapminder_lifeExp %>%
 | Africa    |  1972|   47.45094|
 | Africa    |  1977|   49.58042|
 
-``` r
-gapminder_lifeExp_arr <- gapminder_lifeExp %>% 
-  arrange(mean_gdp)
-
-gapminder_lifeExp_arr %>% 
-  head() %>% 
-  kable()
-```
-
+</td>
+<td>
 | continent |  year|  mean\_gdp|
 |:----------|-----:|----------:|
 | Africa    |  1952|   39.13550|
@@ -307,14 +316,16 @@ gapminder_lifeExp_arr %>%
 | Asia      |  1952|   46.31439|
 | Africa    |  1972|   47.45094|
 
-We observe the difference between the tables after the *arrange* function has been applied. Now we will test if the arrangment is preserved after writing and reading to a file:
+</td>
+</tr>
+</tbody>
+</table>
+The original data is shown on the left while the arranged data is shown on the right. We observe the difference in values and will use these tables to determine whether the *csv* file preserves the arrangement or reverts to the original order:
 
 ``` r
 write_csv(gapminder_lifeExp_arr, "gapminder_lifeExp_arr.csv")
 
-read_csv("gapminder_lifeExp_arr.csv") %>% 
-  head() %>% 
-  kable()
+read_csv("gapminder_lifeExp_arr.csv")
 ```
 
     ## Parsed with column specification:
@@ -324,6 +335,51 @@ read_csv("gapminder_lifeExp_arr.csv") %>%
     ##   mean_gdp = col_double()
     ## )
 
+    ## # A tibble: 60 x 3
+    ##    continent  year mean_gdp
+    ##    <chr>     <int>    <dbl>
+    ##  1 Africa     1952     39.1
+    ##  2 Africa     1957     41.3
+    ##  3 Africa     1962     43.3
+    ##  4 Africa     1967     45.3
+    ##  5 Asia       1952     46.3
+    ##  6 Africa     1972     47.5
+    ##  7 Asia       1957     49.3
+    ##  8 Africa     1977     49.6
+    ##  9 Asia       1962     51.6
+    ## 10 Africa     1982     51.6
+    ## # ... with 50 more rows
+
+``` r
+kable(
+  list(head(gapminder_lifeExp), 
+       head(gapminder_lifeExp_arr), 
+       head(read_csv("gapminder_lifeExp_arr.csv")))
+  )
+```
+
+    ## Parsed with column specification:
+    ## cols(
+    ##   continent = col_character(),
+    ##   year = col_integer(),
+    ##   mean_gdp = col_double()
+    ## )
+
+<table class="kable_wrapper">
+<tbody>
+<tr>
+<td>
+| continent |  year|  mean\_gdp|
+|:----------|-----:|----------:|
+| Africa    |  1952|   39.13550|
+| Africa    |  1957|   41.26635|
+| Africa    |  1962|   43.31944|
+| Africa    |  1967|   45.33454|
+| Africa    |  1972|   47.45094|
+| Africa    |  1977|   49.58042|
+
+</td>
+<td>
 | continent |  year|  mean\_gdp|
 |:----------|-----:|----------:|
 | Africa    |  1952|   39.13550|
@@ -333,12 +389,27 @@ read_csv("gapminder_lifeExp_arr.csv") %>%
 | Asia      |  1952|   46.31439|
 | Africa    |  1972|   47.45094|
 
-The new arrangement of the data was preserved, therefore we learned that *arrange* can be used to manipulate tables that are written externally to files, in addition to tables internally within the R environment, as we learned in the previous section.
+</td>
+<td>
+| continent |  year|  mean\_gdp|
+|:----------|-----:|----------:|
+| Africa    |  1952|   39.13550|
+| Africa    |  1957|   41.26635|
+| Africa    |  1962|   43.31944|
+| Africa    |  1967|   45.33454|
+| Asia      |  1952|   46.31439|
+| Africa    |  1972|   47.45094|
+
+</td>
+</tr>
+</tbody>
+</table>
+The new table, shown on the far right, matches the second table which represented the arranged data. Therefore, we learned that *arrange* can be used to manipulate tables that are written externally to files. This is a powerful technique for manipulating data, as it is much more convinient to sort data using R than to sort it manually in a *csv*.
 
 Part 3 - Visualization Design
 -----------------------------
 
-Next I will improve my first plot using techniques from visualization design to enhance the appearance and readability. My first plot looked like this:
+Next I will improve the plot from Part 1 by using visualization design techniques to enhance the appearance and readability. As a reminder, my first plot looked like this:
 
 ``` r
 Europe_gdp_arr %>% 
@@ -350,11 +421,9 @@ Europe_gdp_arr %>%
   theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 10))  #Rotate x labels
 ```
 
-![](hw05-lsloboda_files/figure-markdown_github/unnamed-chunk-12-1.png)
+![](hw05-lsloboda_files/figure-markdown_github/unnamed-chunk-14-1.png)
 
-I applied a few different techniques from class to improve the plot visually: \* Changing the scale to *dollar\_format()* \* Using the *black & white* theme \* Eliminating the unnecessary borders on the top and right side of the plot \* Centering the title \* Applying a continuous colour scheme to visually separate the countries by colour \* Removing the legend that is generated from applying the colour scheme
-
-Overall, I believe that the plot is visually easier to read and more appealing to the viewer, due to the removal of unnecessary features and the addition of colour:
+I will apply a few different techniques from class to improve the plot visually: \* Changing the scale to *dollar\_format()* \* Using the *black & white* theme \* Eliminating the unnecessary borders on the top and right side of the plot \* Centering the title \* Applying a continuous colour scheme to visually separate the countries by colour \* Removing the legend that is generated from applying the colour scheme
 
 ``` r
 Europe_gdp_plot <- Europe_gdp_arr %>% 
@@ -375,14 +444,18 @@ Europe_gdp_plot <- Europe_gdp_arr %>%
 Europe_gdp_plot
 ```
 
-![](hw05-lsloboda_files/figure-markdown_github/unnamed-chunk-13-1.png)
+![](hw05-lsloboda_files/figure-markdown_github/unnamed-chunk-15-1.png)
 
-Then, we will convert this plot into a *plotly* plot using the porting function in *ggplotly*:
+Overall, I believe that the plot is visually easier to read and more appealing to the viewer, due to the removal of unnecessary features and the addition of colour to separate the countries.
+
+Next, we will convert this plot into a *plotly* plot using the porting function in *ggplotly*:
 
 ``` r
 #Europe_gdp_plot %>% 
  # ggplotly()
 ```
+
+To reduce the file size in Github, the output image can be viewed ~[here](https://github.com/STAT545-UBC-students/hw05-lsloboda).
 
 The biggest advantage that I can glean from using *plotly* is the ability to read data point values using the cursor. By mousing over any location on the graph, it is possible to see the exact (x,y) coordinates. The conversion also added the legend back in, but the rest of the formatting was preserved. The overal aesthetic is slightly cleaner and crisper than the \*\*ggplot\* plot. I believe this is due to the change in font and crisper borders.
 
@@ -401,14 +474,14 @@ The biggest advantage that I can glean from using *plotly* is the ability to rea
   #htmlwidgets::saveWidget("plotly.html"
 ```
 
+To reduce the file size in Github, the output image can be viewed ~[here](https://github.com/STAT545-UBC-students/hw05-lsloboda).
+
+*Plotly* opens us many possibilities for making data more interactive. It allows plots to be easily embedded on webpages and allows you to explore many new visualizations options that can help to reveal correlations in the data.
+
 Part 4 - Writing figures to file
 --------------------------------
 
-Use ggsave() to explicitly save a plot to file. Then use dfdf to load and embed it in your report. You can play around with various options, such as:
-
-Arguments of ggsave(), such as width, height, resolution or text scaling. Various graphics devices, e.g. a vector vs. raster format. Explicit provision of the plot object p via ggsave(..., plot = p). Show a situation in which this actually matters.
-
-Finally, we will save the plot as a *png* image.
+Finally, we will save the plot as a *png* image:
 
 ``` r
 ggsave("Europe_gdp_plot.png", plot = Europe_gdp_plot, width = 18, height = 8, units = "cm")
