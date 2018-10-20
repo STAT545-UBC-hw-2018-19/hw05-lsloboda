@@ -180,8 +180,6 @@ Europe_gdp %>%
   labs(title = "GDP per capita - Europe",
     x = "Country", y = "GDP per capita") +
   scale_y_log10(labels=dollar_format()) +
-  #scale_x_log10(labels=comma_format()) + #Apply the scale package to suit the scale to the values
-  theme_bw() +
   theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 10))  #Rotate x labels
 ```
 
@@ -225,8 +223,6 @@ Europe_gdp_arr %>%
   labs(title = "GDP per capita - Europe",
     x = "Country", y = "GDP per capita") +
   scale_y_log10(labels=dollar_format()) +
-  #scale_x_log10(labels=comma_format()) + #Apply the scale package to suit the scale to the values
-  theme_bw() +
   theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 10))  #Rotate x labels
 ```
 
@@ -241,8 +237,6 @@ Europe_gdp %>%
   labs(title = "GDP per capita - Europe",
     x = "Country", y = "GDP per capita") +
   scale_y_log10(labels=dollar_format()) +
-  #scale_x_log10(labels=comma_format()) + #Apply the scale package to suit the scale to the values
-  theme_bw() +
   theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 10))  #Rotate x labels
 ```
 
@@ -257,8 +251,6 @@ Europe_gdp_arr %>%
   labs(title = "GDP per capita - Europe",
     x = "Country", y = "GDP per capita") +
   scale_y_log10(labels=dollar_format()) +
-  #scale_x_log10(labels=comma_format()) + #Apply the scale package to suit the scale to the values
-  theme_bw() +
   theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 10))  #Rotate x labels
 ```
 
@@ -353,9 +345,47 @@ Remake at least one figure or create a new one, in light of something you learne
 
 Then, make a new graph by converting this visual (or another, if you’d like) to a plotly graph. What are some things that plotly makes possible, that are not possible with a regular ggplot2 graph?
 
+``` r
+Europe_gdp_arr %>% 
+  ggplot(aes(fct_reorder(country, gdpPercap), gdpPercap)) + 
+  geom_violin() +
+  labs(title = "GDP per capita (European countries)",
+    x = "Country", y = "GDP per capita") +
+  scale_y_log10() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 10))  #Rotate x labels
+```
+
+![](hw05-lsloboda_files/figure-markdown_github/unnamed-chunk-12-1.png)
+
+Second attempt:
+
+``` r
+Europe_gdp_arr %>% 
+  ggplot(aes(fct_reorder(country, gdpPercap), gdpPercap, fill = country), alpha = 0.2) + 
+  geom_violin() +
+  labs(title = "GDP per capita (European countries)",
+    x = "Country", y = "GDP per capita") +
+  scale_y_log10(labels=dollar_format()) +
+  theme_bw() +
+  theme(panel.border = element_blank(), 
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(), 
+       axis.line = element_line(colour = "black")) +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  guides(fill = FALSE) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 10))
+```
+
+![](hw05-lsloboda_files/figure-markdown_github/unnamed-chunk-13-1.png)
+
 Part 4 - Writing figures to file
 --------------------------------
 
 Use ggsave() to explicitly save a plot to file. Then use dfdf to load and embed it in your report. You can play around with various options, such as:
 
 Arguments of ggsave(), such as width, height, resolution or text scaling. Various graphics devices, e.g. a vector vs. raster format. Explicit provision of the plot object p via ggsave(..., plot = p). Show a situation in which this actually matters.
+
+Resources
+---------
+
+<http://felixfan.github.io/ggplot2-remove-grid-background-margin/>
