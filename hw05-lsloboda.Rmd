@@ -4,39 +4,43 @@ output:
   github_document
 ---
 
-# Tidy data and joins
+# Factor and figure management
 
 ## Initialize the data
 
-* Load the gapminder, tidyverse, knitr and kableExtra libraries:
+* Load the required libraries:
 
 ```{r}
 suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(gapminder))
 suppressPackageStartupMessages(library(knitr))
-suppressPackageStartupMessages(library(kableExtra))
+suppressPackageStartupMessages(library(plotly))
+suppressPackageStartupMessages(library(broom))
 ```
 
-* We will take a quick look at the data to *sanity check* that the data and variables appear as we expect:
+* We'll use *forcats* to help re-order factors (package located inside the tidyverse) and *plotly* to enhance the plot visualization. *Broom* is handy for providing statistical analyses.
+* We will check the structure of the data first to *sanity check* that we are working with factors:
 
 ```{r}
-(head(gapminder))
+gapminder %>% str()
 ```
 
-* Everything looks as expected, so let's start exploring the data
+* We've confirmed that *country* is a factor with 142 levels and *continent* is a factor with 5 levels, so we'll proceed with manipulating the data.
 
 ## Part 1 - Factor Management
-*Check that data are factors*
 *Characterize data before and after re-levelling*
 
+Drop Oceania. Filter the Gapminder data to remove observations associated with the continent of Oceania. Additionally, remove unused factor levels. Provide concrete information on the data before and after removing these rows and Oceania; address the number of rows and the levels of the affected factors.
+
+Reorder the levels of country or continent. Use the forcats package to change the order of the factor levels, based on a principled summary of one of the quantitative variables. Consider experimenting with a summary statistic beyond the most basic choice of the median.
 
 ### Method
-* Reduce the data subset using *select()* and *group_by()*
-* Spread the countries across the columns using *spread()*
-* Build a table and a scatterplot to compare life expectancy for two or more countries
+* Drop Oceania by filtering the data to remove observations
+* Remove unused factor levels
+* Provide concrete information on the data before/after the manipulation (e.g. effect on number of rows/levels of affected factors)
+* Re-order the levels of continent: use forcats to change the order of the factor levels based on a principlied summary of one of the quantitative variables (consider something other than median)
 
-### Table
-
+### Code
 ```{r}
 q1_table <- gapminder %>% #Creates a tibble so we can re-use it later
   select(year, country, lifeExp) %>% #Reduces the data set size for faster processing
