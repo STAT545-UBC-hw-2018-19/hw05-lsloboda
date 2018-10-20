@@ -15,6 +15,7 @@ suppressPackageStartupMessages(library(gapminder))
 suppressPackageStartupMessages(library(knitr))
 suppressPackageStartupMessages(library(plotly))
 suppressPackageStartupMessages(library(broom))
+suppressPackageStartupMessages(library(scales))
 ```
 
 -   We'll use *forcats* to help re-order factors (package located inside the tidyverse) and *plotly* to enhance the plot visualization. *Broom* is handy for providing statistical analyses.
@@ -112,7 +113,7 @@ gapminder_dropOc <- gapminder_dropOc %>%
 
 gapminder_dropOc %>% 
   summary() %>% 
-  kable()
+  kable()     
 ```
 
 |     |     country     |   continent  |     year     |    lifeExp    |        pop        |    gdpPercap    |
@@ -140,21 +141,130 @@ gapminder_dropOc %>%
 
 We observe that Oceania has now disappeared from the continent list. Further, we see that the factor continent now has only 4 levels. The original data set had 1704 observations of 6 variables (i.e. 1704 rows and 6 columns), while the manipulated data set has 1680 observations of 6 variables. Therefore we observe a concrete reduction on the data. When manipulating a data set through filters, it is advantageous to create a new variable for the manipulated data in order to refer to it in the future and maintain the integrity of the original data set.
 
--   Next we will create a principled summary of the data based on the quantitative variable *gdpPercap*:
+-   Next we will create a principled summary of the data based on the quantitative variable *gdpPercap*. We want to evaluate the rank of countries in Europe based on gdpPercap. We will start by plotting the data as is:
 
 ``` r
-gdpPercap_ <- gapminder_dropOc %>% 
-  select(continent, year, gdpPercap) %>% #Reduce the size of the data set
-  group_by(continent) %>% 
-  kable()
-  #spread(key = "continent", value = "gdpPercap")
+Europe_gdp <- gapminder %>% 
+  select(continent, country, gdpPercap,year) %>%  #Reduce the size of the data set for faster processing
+  filter(continent == "Europe") 
+
+Europe_gdp %>% 
+  str()
 ```
 
-Reorder the levels of country or continent. Use the forcats package to change the order of the factor levels, based on a principled summary of one of the quantitative variables. Consider experimenting with a summary statistic beyond the most basic choice of the median.
+    ## Classes 'tbl_df', 'tbl' and 'data.frame':    360 obs. of  4 variables:
+    ##  $ continent: Factor w/ 5 levels "Africa","Americas",..: 4 4 4 4 4 4 4 4 4 4 ...
+    ##  $ country  : Factor w/ 142 levels "Afghanistan",..: 2 2 2 2 2 2 2 2 2 2 ...
+    ##  $ gdpPercap: num  1601 1942 2313 2760 3313 ...
+    ##  $ year     : int  1952 1957 1962 1967 1972 1977 1982 1987 1992 1997 ...
 
-Be sure to also characterize the (derived) data before and after your factor re-leveling:
+``` r
+Europe_gdp %>% 
+  head() %>% 
+  kable()
+```
 
-Explore the effects of arrange(). Does merely arranging the data have any effect on, say, a figure? Explore the effects of reordering a factor and factor reordering coupled with arrange(). Especially, what effect does this have on a figure? These explorations should involve the data, the factor levels, and some figures.
+| continent | country |  gdpPercap|  year|
+|:----------|:--------|----------:|-----:|
+| Europe    | Albania |   1601.056|  1952|
+| Europe    | Albania |   1942.284|  1957|
+| Europe    | Albania |   2312.889|  1962|
+| Europe    | Albania |   2760.197|  1967|
+| Europe    | Albania |   3313.422|  1972|
+| Europe    | Albania |   3533.004|  1977|
+
+``` r
+Europe_gdp %>% 
+  ggplot(aes(country, gdpPercap)) + 
+  geom_point() +
+  labs(title = "GDP per capita - Europe",
+    x = "Country", y = "GDP per capita") +
+  scale_y_log10(labels=dollar_format()) +
+  #scale_x_log10(labels=comma_format()) + #Apply the scale package to suit the scale to the values
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 10))  #Rotate x labels
+```
+
+![](hw05-lsloboda_files/figure-markdown_github/unnamed-chunk-6-1.png)
+
+Plotting the data directly doesn't provide any insight into a correlation between these two variables. We will next *arrange* by gdpPerCap to see whether this has an effect on the table and plot:
+
+``` r
+Europe_gdp_arr <- Europe_gdp %>% 
+  arrange(gdpPercap)
+
+Europe_gdp_arr %>% 
+  str()
+```
+
+    ## Classes 'tbl_df', 'tbl' and 'data.frame':    360 obs. of  4 variables:
+    ##  $ continent: Factor w/ 5 levels "Africa","Americas",..: 4 4 4 4 4 4 4 4 4 4 ...
+    ##  $ country  : Factor w/ 142 levels "Afghanistan",..: 13 13 2 13 2 132 13 132 2 132 ...
+    ##  $ gdpPercap: num  974 1354 1601 1710 1942 ...
+    ##  $ year     : int  1952 1957 1952 1962 1957 1952 1967 1957 1962 1962 ...
+
+``` r
+Europe_gdp_arr %>% 
+  head() %>% 
+  kable()
+```
+
+| continent | country                |  gdpPercap|  year|
+|:----------|:-----------------------|----------:|-----:|
+| Europe    | Bosnia and Herzegovina |   973.5332|  1952|
+| Europe    | Bosnia and Herzegovina |  1353.9892|  1957|
+| Europe    | Albania                |  1601.0561|  1952|
+| Europe    | Bosnia and Herzegovina |  1709.6837|  1962|
+| Europe    | Albania                |  1942.2842|  1957|
+| Europe    | Turkey                 |  1969.1010|  1952|
+
+``` r
+Europe_gdp_arr %>% 
+  ggplot(aes(country, gdpPercap)) + 
+  geom_point() +
+  labs(title = "GDP per capita - Europe",
+    x = "Country", y = "GDP per capita") +
+  scale_y_log10(labels=dollar_format()) +
+  #scale_x_log10(labels=comma_format()) + #Apply the scale package to suit the scale to the values
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 10))  #Rotate x labels
+```
+
+![](hw05-lsloboda_files/figure-markdown_github/unnamed-chunk-7-1.png)
+
+We observe the *arrange* did not affect the structure or the plot, however the table output is clearly different. Next we will evaluate the effect of using the *forcats* package to re-order the data:
+
+``` r
+Europe_gdp %>% 
+  ggplot(aes(fct_reorder(country, gdpPercap), gdpPercap)) + 
+  geom_point() +
+  labs(title = "GDP per capita - Europe",
+    x = "Country", y = "GDP per capita") +
+  scale_y_log10(labels=dollar_format()) +
+  #scale_x_log10(labels=comma_format()) + #Apply the scale package to suit the scale to the values
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 10))  #Rotate x labels
+```
+
+![](hw05-lsloboda_files/figure-markdown_github/unnamed-chunk-8-1.png)
+
+We observe that *fct\_reorder* does affect the plot, as it now shows countries in order of ascending median GDP per capita. Finally, we will examine the effect of combining *arrange* and *fct\_reorder*:
+
+``` r
+Europe_gdp_arr %>% 
+  ggplot(aes(fct_reorder(country, gdpPercap), gdpPercap)) + 
+  geom_point() +
+  labs(title = "GDP per capita - Europe",
+    x = "Country", y = "GDP per capita") +
+  scale_y_log10(labels=dollar_format()) +
+  #scale_x_log10(labels=comma_format()) + #Apply the scale package to suit the scale to the values
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 10))  #Rotate x labels
+```
+
+![](hw05-lsloboda_files/figure-markdown_github/unnamed-chunk-9-1.png)
+
+Thus, coupling *arrange* and *fct\_reorder* allows us to manipulate the structure, table and plot, so it is more comprehensive to use both commands if all three types of output are desired.
 
 Part 2 - File I/O
 -----------------
