@@ -25,7 +25,7 @@ suppressPackageStartupMessages(library(broom))
 gapminder %>% str()
 ```
 
-* We've confirmed that *country* is a factor with 142 levels and *continent* is a factor with 5 levels, so we'll proceed with manipulating the data.
+* We've confirmed that *country* is a factor with 142 levels and *continent* is a factor with 5 levels. We'll proceed with manipulating the data.
 
 ## Part 1 - Factor Management
 *Characterize data before and after re-levelling*
@@ -38,21 +38,88 @@ Reorder the levels of country or continent. Use the forcats package to change th
 * Drop Oceania by filtering the data to remove observations
 * Remove unused factor levels
 * Provide concrete information on the data before/after the manipulation (e.g. effect on number of rows/levels of affected factors)
-* Re-order the levels of continent: use forcats to change the order of the factor levels based on a principlied summary of one of the quantitative variables (consider something other than median)
+* Re-order the levels of continent: use forcats to change the order of the factor levels based on a principled summary of one of the quantitative variables (consider something other than median)
 
 ### Code
-```{r}
-q1_table <- gapminder %>% #Creates a tibble so we can re-use it later
-  select(year, country, lifeExp) %>% #Reduces the data set size for faster processing
-    group_by(year) %>% 
-      spread(key = "country", value = "lifeExp") %>% 
-        select("Canada", "Germany", "Brazil") 
-  
-is.tibble(q1_table)
+First, we will examine a summary of the initial data:
 
-q1_table %>% 
-  kable(col.names = c("Year", "Canada", "Germany", "Brazil")) %>% #Using kable enhances the output
-    kable_styling()
+```{r}
+gapminder %>% 
+  summary() %>% #Evaluate the factors and observations per factor
+  kable() #Enhance the table output
+```
+
+Oceania has 24 observations in the original data set. Next we will drop the observations related to Oceania from the data set:
+
+```{r}
+gapminder_dropOc <- gapminder %>%
+  filter(continent != "Oceania") 
+
+gapminder_dropOc %>% 
+  summary() %>%  
+  kable() 
+
+gapminder_dropOc %>% 
+  str()
+```
+
+Oceania now has 0 observations, however it is still present in the data frame as a factor. Next, we will drop Oceania as an unused factor using the *droplevels()* function from the *forcats* package:
+
+```{r}
+gapminder_dropOc <- gapminder_dropOc %>%
+  droplevels()
+
+gapminder_dropOc %>% 
+  summary() %>% 
+  kable()       #highlight cell in table if possible
+
+gapminder_dropOc %>% 
+  str()
+```
+
+We observe that Oceania has now disappeared from the continent list. Further, we see that the factor continent now has only 4 levels. The original data set had 1704 observations of 6 variables (i.e. 1704 rows and 6 columns), while the manipulated data set has 1680 observations of 6 variables. Therefore we observe a concrete reduction on the data. When manipulating a data set through filters, it is advantageous to create a new variable for the manipulated data in order to refer to it in the future and maintain the integrity of the original data set.
+
+* Next we will create a principled summary of the data based on the quantitative variable *gdpPercap*:
+```{r}
+gdpPercap_ <- gapminder_dropOc %>% 
+  select(continent, year, gdpPercap) %>% #Reduce the size of the data set
+  group_by(continent) %>% 
+  kable()
+  #spread(key = "continent", value = "gdpPercap")
+
+
+```
+
+
+Reorder the levels of country or continent. Use the forcats package to change the order of the factor levels, based on a principled summary of one of the quantitative variables. Consider experimenting with a summary statistic beyond the most basic choice of the median.
+
+Be sure to also characterize the (derived) data before and after your factor re-leveling:
+
+Explore the effects of arrange(). Does merely arranging the data have any effect on, say, a figure?
+Explore the effects of reordering a factor and factor reordering coupled with arrange(). Especially, what effect does this have on a figure?
+These explorations should involve the data, the factor levels, and some figures.
+
+```{r}
+ggplot(gap_america) +
+    geom_bar(aes(country, lifeExp/n_distinct(gapminder$year)), stat = "identity", fill = "steel blue") + #tell geom_bar to use the y aesthetic instead of the bar. Divide by 12 to get correct lifeExp values
+    theme(axis.text.x = element_text(angle = 45, hjust = 1)) + #change x label angles to be more readable
+    labs(title = "Life Expectancy in the Americas",
+         x = "Country", y = "Life Expectancy")
+
+gap_america %>%
+  mutate(country = fct_reorder(country, pop)) %>% #Reorder factor
+  ggplot() +
+    geom_bar(aes(country, lifeExp/n_distinct(gapminder$year)), stat = "identity", fill = "steel blue") + #tell geom_bar to use the y aesthetic instead of the bar. Divide by 12 to get correct lifeExp values
+    theme(axis.text.x = element_text(angle = 60, hjust = 1)) + #change x label angles to be more readable
+    labs(title = "Life Expectancy in the Americas (ordered by population)",
+         x = "Country", y = "Life Expectancy")
+
+  droplevels() %>%
+  group_by(country) %>%
+  mutate(mean_pop = mean(pop)) %>%
+  arrange(mean_pop) #Arrange by mean poplutation some all country measurements stay
+
+kable(head(gap_america_arr, 15))
 ```
 
 ## Part 2 - File I/O
