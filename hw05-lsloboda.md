@@ -286,7 +286,9 @@ gapminder_lifeExp <- gapminder %>%
   group_by(continent, year) %>% 
   summarise(mean_gdp = mean(lifeExp))
 
-gapminder_lifeExp %>% kable()
+gapminder_lifeExp %>% 
+  head() %>% 
+  kable()
 ```
 
 | continent |  year|  mean\_gdp|
@@ -297,66 +299,13 @@ gapminder_lifeExp %>% kable()
 | Africa    |  1967|   45.33454|
 | Africa    |  1972|   47.45094|
 | Africa    |  1977|   49.58042|
-| Africa    |  1982|   51.59287|
-| Africa    |  1987|   53.34479|
-| Africa    |  1992|   53.62958|
-| Africa    |  1997|   53.59827|
-| Africa    |  2002|   53.32523|
-| Africa    |  2007|   54.80604|
-| Americas  |  1952|   53.27984|
-| Americas  |  1957|   55.96028|
-| Americas  |  1962|   58.39876|
-| Americas  |  1967|   60.41092|
-| Americas  |  1972|   62.39492|
-| Americas  |  1977|   64.39156|
-| Americas  |  1982|   66.22884|
-| Americas  |  1987|   68.09072|
-| Americas  |  1992|   69.56836|
-| Americas  |  1997|   71.15048|
-| Americas  |  2002|   72.42204|
-| Americas  |  2007|   73.60812|
-| Asia      |  1952|   46.31439|
-| Asia      |  1957|   49.31854|
-| Asia      |  1962|   51.56322|
-| Asia      |  1967|   54.66364|
-| Asia      |  1972|   57.31927|
-| Asia      |  1977|   59.61056|
-| Asia      |  1982|   62.61794|
-| Asia      |  1987|   64.85118|
-| Asia      |  1992|   66.53721|
-| Asia      |  1997|   68.02052|
-| Asia      |  2002|   69.23388|
-| Asia      |  2007|   70.72848|
-| Europe    |  1952|   64.40850|
-| Europe    |  1957|   66.70307|
-| Europe    |  1962|   68.53923|
-| Europe    |  1967|   69.73760|
-| Europe    |  1972|   70.77503|
-| Europe    |  1977|   71.93777|
-| Europe    |  1982|   72.80640|
-| Europe    |  1987|   73.64217|
-| Europe    |  1992|   74.44010|
-| Europe    |  1997|   75.50517|
-| Europe    |  2002|   76.70060|
-| Europe    |  2007|   77.64860|
-| Oceania   |  1952|   69.25500|
-| Oceania   |  1957|   70.29500|
-| Oceania   |  1962|   71.08500|
-| Oceania   |  1967|   71.31000|
-| Oceania   |  1972|   71.91000|
-| Oceania   |  1977|   72.85500|
-| Oceania   |  1982|   74.29000|
-| Oceania   |  1987|   75.32000|
-| Oceania   |  1992|   76.94500|
-| Oceania   |  1997|   78.19000|
-| Oceania   |  2002|   79.74000|
-| Oceania   |  2007|   80.71950|
 
 ``` r
 gapminder_lifeExp_arr <- gapminder_lifeExp %>% 
   arrange(mean_gdp)
 
 gapminder_lifeExp_arr %>% 
+  head() %>% 
   kable()
 ```
 
@@ -368,67 +317,15 @@ gapminder_lifeExp_arr %>%
 | Africa    |  1967|   45.33454|
 | Asia      |  1952|   46.31439|
 | Africa    |  1972|   47.45094|
-| Asia      |  1957|   49.31854|
-| Africa    |  1977|   49.58042|
-| Asia      |  1962|   51.56322|
-| Africa    |  1982|   51.59287|
-| Americas  |  1952|   53.27984|
-| Africa    |  2002|   53.32523|
-| Africa    |  1987|   53.34479|
-| Africa    |  1997|   53.59827|
-| Africa    |  1992|   53.62958|
-| Asia      |  1967|   54.66364|
-| Africa    |  2007|   54.80604|
-| Americas  |  1957|   55.96028|
-| Asia      |  1972|   57.31927|
-| Americas  |  1962|   58.39876|
-| Asia      |  1977|   59.61056|
-| Americas  |  1967|   60.41092|
-| Americas  |  1972|   62.39492|
-| Asia      |  1982|   62.61794|
-| Americas  |  1977|   64.39156|
-| Europe    |  1952|   64.40850|
-| Asia      |  1987|   64.85118|
-| Americas  |  1982|   66.22884|
-| Asia      |  1992|   66.53721|
-| Europe    |  1957|   66.70307|
-| Asia      |  1997|   68.02052|
-| Americas  |  1987|   68.09072|
-| Europe    |  1962|   68.53923|
-| Asia      |  2002|   69.23388|
-| Oceania   |  1952|   69.25500|
-| Americas  |  1992|   69.56836|
-| Europe    |  1967|   69.73760|
-| Oceania   |  1957|   70.29500|
-| Asia      |  2007|   70.72848|
-| Europe    |  1972|   70.77503|
-| Oceania   |  1962|   71.08500|
-| Americas  |  1997|   71.15048|
-| Oceania   |  1967|   71.31000|
-| Oceania   |  1972|   71.91000|
-| Europe    |  1977|   71.93777|
-| Americas  |  2002|   72.42204|
-| Europe    |  1982|   72.80640|
-| Oceania   |  1977|   72.85500|
-| Americas  |  2007|   73.60812|
-| Europe    |  1987|   73.64217|
-| Oceania   |  1982|   74.29000|
-| Europe    |  1992|   74.44010|
-| Oceania   |  1987|   75.32000|
-| Europe    |  1997|   75.50517|
-| Europe    |  2002|   76.70060|
-| Oceania   |  1992|   76.94500|
-| Europe    |  2007|   77.64860|
-| Oceania   |  1997|   78.19000|
-| Oceania   |  2002|   79.74000|
-| Oceania   |  2007|   80.71950|
 
 We observe the difference between the tables after the *arrange* function has been applied. Now we will test if the arrangment is preserved after writing and reading to a file:
 
 ``` r
 write_csv(gapminder_lifeExp_arr, "gapminder_lifeExp_arr.csv")
 
-read_csv("gapminder_lifeExp_arr.csv")
+read_csv("gapminder_lifeExp_arr.csv") %>% 
+  head() %>% 
+  kable()
 ```
 
     ## Parsed with column specification:
@@ -438,20 +335,14 @@ read_csv("gapminder_lifeExp_arr.csv")
     ##   mean_gdp = col_double()
     ## )
 
-    ## # A tibble: 60 x 3
-    ##    continent  year mean_gdp
-    ##    <chr>     <int>    <dbl>
-    ##  1 Africa     1952     39.1
-    ##  2 Africa     1957     41.3
-    ##  3 Africa     1962     43.3
-    ##  4 Africa     1967     45.3
-    ##  5 Asia       1952     46.3
-    ##  6 Africa     1972     47.5
-    ##  7 Asia       1957     49.3
-    ##  8 Africa     1977     49.6
-    ##  9 Asia       1962     51.6
-    ## 10 Africa     1982     51.6
-    ## # ... with 50 more rows
+| continent |  year|  mean\_gdp|
+|:----------|-----:|----------:|
+| Africa    |  1952|   39.13550|
+| Africa    |  1957|   41.26635|
+| Africa    |  1962|   43.31944|
+| Africa    |  1967|   45.33454|
+| Asia      |  1952|   46.31439|
+| Africa    |  1972|   47.45094|
 
 The new arrangement of the data was preserved, therefore we learned that *arrange* can be used to manipulate tables that are written externally to files, in addition to tables internally within the R environment, as we learned in the previous section.
 
@@ -465,15 +356,6 @@ Then, make a new graph by converting this visual (or another, if you’d like) t
 Part 4 - Writing figures to file
 --------------------------------
 
-Use ggsave() to explicitly save a plot to file. Then use ![Alt text](/path/to/img.png) to load and embed it in your report. You can play around with various options, such as:
+Use ggsave() to explicitly save a plot to file. Then use dfdf to load and embed it in your report. You can play around with various options, such as:
 
 Arguments of ggsave(), such as width, height, resolution or text scaling. Various graphics devices, e.g. a vector vs. raster format. Explicit provision of the plot object p via ggsave(..., plot = p). Show a situation in which this actually matters.
-
-Bonus - Re-evaluate a factor
-----------------------------
-
-Make a deeper exploration of the forcats packages, i.e. try more of the factor level reordering functions.
-
-Revalue a factor, e.g.:
-
-Gapminder version: Pick a handful of countries, each of which you can associate with a stereotypical food (or any other non-controversial thing … sport? hobby? type of music, art or dance? animal? landscape feature?). Create an excerpt of the Gapminder data, filtered to just these countries. Create a new factor – you pick the name! – by mapping the existing country factor levels to the new levels. Examples: Italy –&gt; wine, Germany –&gt; beer, Japan –&gt; sake. (Austria, Germany) –&gt; German, (Mexico, Spain) –&gt; Spanish, (Portugal, Brazil) –&gt; Portuguese. Let your creativity flourish.

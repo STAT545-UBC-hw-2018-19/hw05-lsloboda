@@ -184,12 +184,15 @@ gapminder_lifeExp <- gapminder %>%
   group_by(continent, year) %>% 
   summarise(mean_gdp = mean(lifeExp))
 
-gapminder_lifeExp %>% kable()
+gapminder_lifeExp %>% 
+  head() %>% 
+  kable()
 
 gapminder_lifeExp_arr <- gapminder_lifeExp %>% 
   arrange(mean_gdp)
 
 gapminder_lifeExp_arr %>% 
+  head() %>% 
   kable()
 ```
 
@@ -198,7 +201,9 @@ We observe the difference between the tables after the *arrange* function has be
 ```{r}
 write_csv(gapminder_lifeExp_arr, "gapminder_lifeExp_arr.csv")
 
-read_csv("gapminder_lifeExp_arr.csv")
+read_csv("gapminder_lifeExp_arr.csv") %>% 
+  head() %>% 
+  kable()
 ```
 
 The new arrangement of the data was preserved, therefore we learned that *arrange* can be used to manipulate tables that are written externally to files, in addition to tables internally within the R environment, as we learned in the previous section.
@@ -209,19 +214,15 @@ Remake at least one figure or create a new one, in light of something you learne
 
 Then, make a new graph by converting this visual (or another, if you’d like) to a plotly graph. What are some things that plotly makes possible, that are not possible with a regular ggplot2 graph?
 
+```{r}
+
+
+```
+
 ## Part 4 - Writing figures to file
 
-Use ggsave() to explicitly save a plot to file. Then use ![Alt text](/path/to/img.png) to load and embed it in your report. You can play around with various options, such as:
+Use ggsave() to explicitly save a plot to file. Then use dfdf to load and embed it in your report. You can play around with various options, such as:
 
 Arguments of ggsave(), such as width, height, resolution or text scaling.
 Various graphics devices, e.g. a vector vs. raster format.
 Explicit provision of the plot object p via ggsave(..., plot = p). Show a situation in which this actually matters.
-
-## Bonus - Re-evaluate a factor
-
-Make a deeper exploration of the forcats packages, i.e. try more of the factor level reordering functions.
-
-Revalue a factor, e.g.:
-
-Gapminder version: Pick a handful of countries, each of which you can associate with a stereotypical food (or any other non-controversial thing … sport? hobby? type of music, art or dance? animal? landscape feature?). Create an excerpt of the Gapminder data, filtered to just these countries. Create a new factor – you pick the name! – by mapping the existing country factor levels to the new levels.
-Examples: Italy –> wine, Germany –> beer, Japan –> sake. (Austria, Germany) –> German, (Mexico, Spain) –> Spanish, (Portugal, Brazil) –> Portuguese. Let your creativity flourish.
