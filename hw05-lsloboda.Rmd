@@ -116,9 +116,9 @@ The structure was not affected by *arrange*.
 
 ```{r}
 Europe_gdp_head <- Europe_gdp %>% 
-  head() %>% 
-  kable() %>% 
-  print()
+  head()
+
+kable(Europe_gdp_head)
 
 Europe_gdp_arr_head <- Europe_gdp_arr %>% 
   head() %>% 
