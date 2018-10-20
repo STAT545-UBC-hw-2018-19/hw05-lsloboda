@@ -1,0 +1,57 @@
+---
+title: "hw05-gapminder"
+output:
+  github_document
+---
+
+# Tidy data and joins
+
+## Initialize the data
+
+* Load the gapminder, tidyverse, knitr and kableExtra libraries:
+
+```{r}
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(gapminder))
+suppressPackageStartupMessages(library(knitr))
+suppressPackageStartupMessages(library(kableExtra))
+```
+
+* We will take a quick look at the data to *sanity check* that the data and variables appear as we expect:
+
+```{r}
+(head(gapminder))
+```
+
+* Everything looks as expected, so let's start exploring the data
+
+## Part 1 - Factor Management
+*Check that data are factors*
+*Characterize data before and after re-levelling*
+
+
+### Method
+* Reduce the data subset using *select()* and *group_by()*
+* Spread the countries across the columns using *spread()*
+* Build a table and a scatterplot to compare life expectancy for two or more countries
+
+### Table
+
+```{r}
+q1_table <- gapminder %>% #Creates a tibble so we can re-use it later
+  select(year, country, lifeExp) %>% #Reduces the data set size for faster processing
+    group_by(year) %>% 
+      spread(key = "country", value = "lifeExp") %>% 
+        select("Canada", "Germany", "Brazil") 
+  
+is.tibble(q1_table)
+
+q1_table %>% 
+  kable(col.names = c("Year", "Canada", "Germany", "Brazil")) %>% #Using kable enhances the output
+    kable_styling()
+```
+
+## Part 2 - File I/O
+## Part 3 - Visualization Design
+## Part 4 - Writing figures to file
+## Bonus - Re-evaluate a factor
